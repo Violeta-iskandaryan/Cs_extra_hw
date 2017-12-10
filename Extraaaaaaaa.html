@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        p{
+            font-size:20px;
+            color:darkorange;
+        }
+     #p2, #player2{
+          margin-left:30%;
+          
+      }
+     #p1{
+         position:absolute;
+         margin-top:2%;
+     }
+     #player1{
+          position:absolute;
+         margin-top:3%;
+     }
+     canvas{
+         margin-top:6%;
+     }
+     #p2{
+         position:absolute;
+         margin-top:2%;
+     }
+     #player2{
+         position:absolute;
+         margin-top:3%;
+     }
+    </style>
+</head>
+<body>
+
+    <p>Score</p>
+    
+        <p id="p1">PLAYER 1</p> <p id="player1">0</p>
+        <p id="p2">PLAYER 2</p> <p id="player2">0</p>
+    
+    <canvas id="canvas" width="700" height="700"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        
+       
+
+        
+       
+        const gamedata=[
+            {
+                x:60,
+                y:25,
+                width:10,
+                height:30,
+                deltax:1,
+                deltay: 1,
+                score: document.getElementById("player1").innerHTML
+            },
+               {
+                   x: 640,
+                   y:530,
+                   width: 10,
+                   height: 30,
+                   deltax: 1,
+                   deltay: 1,
+                   score: document.getElementById("player2").innerHTML
+               },
+               {
+                   x: 100,
+                   y: 40,
+                   deltax: 1,
+                   deltay: 1
+               }
+
+
+        ]
+       
+        const rand = function (num) {
+            return Math.floor(Math.random() * num) + 120;
+        }
+        const draw = function () {
+           ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "orange";
+            ctx.fillRect(gamedata[2].x, gamedata[2].y, 10, 10);
+            
+            ctx.beginPath();
+            ctx.setLineDash([20, 20]);
+            ctx.moveTo(350, 0);
+            ctx.lineTo(350, 700);
+            ctx.strokeStyle = "white";
+            ctx.stroke();
+           
+            
+            
+
+            const forEach = function (arr,index) {
+                if (index === arr.length)
+                    return;
+                const point = arr[index]
+                ctx.fillStyle = "green";
+                ctx.fillRect(point.x, point.y, point.width, point.height);
+                forEach(arr, index + 1);
+            }
+            forEach(gamedata, 0);
+        }
+
+        
+        const update = function () {
+            gamedata[2].y = gamedata[2].y + gamedata[2].deltay;
+            gamedata[2].x = gamedata[2].x + gamedata[2].deltax;
+            if (gamedata[2].x===canvas.width) {
+                document.getElementById("player1").innerHTML++;
+                
+               
+            }
+            
+            if (gamedata[2].x === 0) {
+                document.getElementById("player2").innerHTML++;
+                
+            }
+            if (gamedata[2].x <= 0) {
+                gamedata[2].x = rand(590);
+
+            }
+            if (gamedata[2].x >= canvas.width) {
+                gamedata[2].x = rand(590);
+
+            }
+            if (gamedata[2].y+10 >= canvas.height) {
+                gamedata[2].deltax = 2;
+                gamedata[2].deltay = -3;
+            }
+
+            if (gamedata[2].y <= 0) {
+                gamedata[2].deltax = 2;
+                gamedata[2].deltay = 3;
+            }
+            if (gamedata[2].x === 60 && gamedata[2].y <= gamedata[0].y + 40 && gamedata[2].y >= gamedata[0].y-10 ) {
+                gamedata[2].deltax = 2;
+                gamedata[2].deltay = 3;
+            }
+            if (gamedata[1].x === gamedata[2].x+10 &&(gamedata[1].y-10 <= gamedata[2].y && gamedata[1].y + 40 >= gamedata[2].y)){
+                gamedata[2].deltax = -3;
+                gamedata[2].deltay = -2;
+            }
+           
+            const a = 65;
+            const d = 68;
+            const leftKey = 37;
+           
+            const rightKey = 39;
+
+            document.addEventListener('keydown', function (event) {
+                if (event.keyCode === a) {
+                    gamedata[0].y=gamedata[0].y-0.1;
+                }
+                if (event.keyCode ===d) {
+                    gamedata[0].y = gamedata[0].y + 0.1;
+                }
+                if (gamedata[0].y > 670) {
+                    gamedata[0].y = canvas.height-30;
+                }
+                if (gamedata[0].y < 0) {
+                    gamedata[0].y = 0;
+                }
+                if (event.keyCode === leftKey) {
+                    gamedata[1].y = gamedata[1].y - 0.1;
+                }
+                if (event.keyCode === rightKey) {
+                    gamedata[1].y = gamedata[1].y + 0.1;
+                }
+                if (gamedata[1].y > 670) {
+                    gamedata[1].y = canvas.height-30;
+                }
+                if (gamedata[1].y < 0) {
+                    gamedata[1].y = 0;
+                }
+
+                
+            }, false);
+        }
+        const loop = function () {
+            draw();
+         update();
+            requestAnimationFrame(loop);
+        }
+        loop();
+        
+
+       
+        debugger;
+    </script>
+</body>
+</html>
